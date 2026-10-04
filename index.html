@@ -1,380 +1,416 @@
 <!DOCTYPE html>
 <html lang="th">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Moneywise</title>
-    <meta
-      name="description"
-      content="Moneywise dashboard for personal finance, tax estimation, and investment scoring."
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div class="moneywise-app">
-      <aside class="sidebar">
-        <h1>Moneywise</h1>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moneywise – บัญชี ภาษี การลงทุน</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--ink:#14213d;--mute:#5b6678;--line:#e1e6ee;--brand:#14213d;--brand2:#1f3a6b;--up:#0f8a5f;--down:#d13b3b;--soft:#eaf0fa}
+:root[data-theme=dark]{--bg:#0e1420;--card:#172033;--ink:#e8edf6;--mute:#9aa7bd;--line:#26324a;--brand:#0a0f1a;--brand2:#2b4a85;--up:#38c690;--down:#f06b6b;--soft:#1d2a45}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Sarabun,"Noto Sans Thai",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.6;display:flex;min-height:100vh}
+aside{width:250px;background:var(--brand);color:#fff;padding:22px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+aside h1{font-size:20px;margin:0 8px 18px;font-weight:700}
+aside button.nav{all:unset;cursor:pointer;display:block;padding:10px 12px;border-radius:8px;color:#c9d3e6}
+aside button.nav:hover,aside button.nav.on{background:rgba(255,255,255,.12);color:#fff}
+aside button.nav small{display:block;font-size:13px;opacity:.7}
+.sp{flex:1}
+.tg{all:unset;cursor:pointer;padding:8px 12px;border:1px solid rgba(255,255,255,.25);border-radius:8px;font-size:14px;text-align:center;color:#fff}
+main{flex:1;padding:28px 32px;max-width:1100px;min-width:0}
+h2{font-size:26px;margin:0 0 4px}
+.sub{color:var(--mute);margin:0 0 18px}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:20px}
+.tabs button{all:unset;cursor:pointer;padding:10px 16px;color:var(--mute);border-bottom:3px solid transparent;font-weight:500}
+.tabs button.on{color:var(--ink);border-color:var(--brand2)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.kpi b{display:block;font-size:26px}
+.kpi span{color:var(--mute);font-size:14px}
+.up{color:var(--up)}.down{color:var(--down)}
+label{display:block;font-size:14px;color:var(--mute);margin-bottom:4px}
+input,select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--brand2);outline-offset:1px}
+.btn{all:unset;cursor:pointer;background:var(--brand2);color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;text-align:center}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--mute);font-weight:500}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.bar{display:flex;align-items:flex-end;gap:6px;height:120px}
+.bar div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;font-size:12px;color:var(--mute);height:100%}
+.bar i{display:block;width:100%;background:var(--up);border-radius:4px 4px 0 0;min-height:2px}
+.bar i.e{background:var(--down);opacity:.8}
+.pair{display:flex;gap:2px;align-items:flex-end;width:100%;height:100%}
+.note{background:var(--soft);border-radius:8px;padding:12px 14px;font-size:14px}
+.warn{font-size:13px;color:var(--mute);margin-top:18px}
+.tip{border-left:4px solid var(--up);padding:8px 12px;background:var(--soft);border-radius:0 8px 8px 0;margin:8px 0;font-size:15px}
+details{border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:8px;background:var(--card)}
+summary{cursor:pointer;font-weight:600}
+.step{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}
+.step em{font-style:normal;background:var(--soft);border-radius:50%;width:32px;height:32px;display:grid;place-items:center;font-weight:700;flex-shrink:0}
+.hide{display:none}
+.chip{all:unset;cursor:pointer;border:1px solid var(--line);border-radius:99px;padding:3px 12px;font-size:14px;margin:0 6px 6px 0;display:inline-block}
+textarea{width:100%;min-height:150px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit}
+.ai{background:var(--soft);border-radius:8px;padding:12px 14px;margin-top:12px;white-space:pre-wrap}
+.pill{padding:2px 10px;border-radius:99px;font-size:13px;font-weight:600;background:var(--soft)}
+.hint{display:none;font-size:13px;color:var(--mute);margin-top:4px}.nb .hint{display:block}
+tr.sel{background:var(--soft)}tr[data-i]{cursor:pointer}
+@media print{aside,.noprint{display:none!important}body{display:block;background:#fff;color:#000}main{padding:0;max-width:none}.card{border:0;padding:0}}
+@media(max-width:800px){body{flex-direction:column}aside{width:100%;height:auto;position:static;flex-direction:row;flex-wrap:wrap;padding:12px}aside h1{width:100%;margin:0 0 4px}aside button.nav small,.sp{display:none}main{padding:18px 14px}}
+</style>
+</head>
+<body>
+<aside>
+  <h1>Moneywise</h1>
+  <button class="nav on" data-m="home">ภาพรวม<small>แดชบอร์ด</small></button>
+  <button class="nav" data-m="acc">บัญชีและภาษี<small>ขั้นที่ 1 · พร้อมใช้</small></button>
+  <button class="nav" data-m="doc">สรุปไฟล์ / PDF<small>ขั้นที่ 2 · พร้อมใช้</small></button>
+  <button class="nav" data-m="inv">ที่ปรึกษาการลงทุน<small>ขั้นที่ 3 · พร้อมใช้</small></button>
+  <div class="sp"></div>
+  <button class="tg" id="nb">โหมดมือใหม่: ปิด</button>
+  <button class="tg" id="ai-set">ตั้งค่า AI</button>
+  <button class="tg" id="theme">โหมดมืด / สว่าง</button>
+</aside>
+<main>
+<section id="m-home"><h2>ภาพรวม</h2><p class="sub">สรุปจากข้อมูลที่คุณบันทึกไว้ในเว็บนี้ (เก็บในเบราว์เซอร์ของคุณเท่านั้น)</p>
+  <div class="grid" id="h-kpi"></div>
+  <div class="grid" style="margin-top:16px"><div class="card"><b>หุ้นคะแนนสูงสุด</b><div id="h-st" style="margin-top:8px"></div></div>
+  <div class="card"><b>สรุปไฟล์ล่าสุด</b><div id="h-doc" style="margin-top:8px"></div></div></div>
+  <div class="card"><b>เริ่มใช้งาน</b><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px"><button class="btn" data-go="acc">บันทึกรายรับ-รายจ่าย / คำนวณภาษี</button><button class="btn ghost" data-go="doc">สรุปไฟล์</button><button class="btn ghost" data-go="inv">วิเคราะห์หุ้น</button></div></div></section>
+<!-- MODULE 1 -->
+<section id="m-acc" class="hide">
+  <h2>บัญชีและภาษี</h2>
+  <p class="sub">บันทึกรายรับ-รายจ่าย คำนวณภาษีเงินได้บุคคลธรรมดา และเรียนรู้พื้นฐานบัญชี</p>
+  <div class="tabs" id="tabs-acc">
+    <button class="on" data-t="led">รายรับ-รายจ่าย</button>
+    <button data-t="tax">คำนวณภาษี</button>
+    <button data-t="lrn">เรียนบัญชี</button>
+  </div>
 
-        <button class="nav active" data-target="acc" type="button">
-          <span>บัญชีและภาษี</span>
-          <small>ขั้นที่ 1 · พร้อมใช้</small>
-        </button>
-        <button class="nav" data-target="doc" type="button">
-          <span>สรุปไฟล์ / PDF</span>
-          <small>ขั้นที่ 2 · พร้อมใช้</small>
-        </button>
-        <button class="nav" data-target="inv" type="button">
-          <span>ที่ปรึกษาการลงทุน</span>
-          <small>ขั้นที่ 3 · พร้อมใช้</small>
-        </button>
-
-        <div class="sidebar-spacer"></div>
-
-        <button type="button" class="secondary-btn" id="aiSetupBtn">ตั้งค่า AI</button>
-        <button type="button" class="secondary-btn" id="themeToggleBtn">โหมดมืด / สว่าง</button>
-      </aside>
-
-      <main class="main-panel">
-        <section class="panel active" data-panel="acc">
-          <h2>บัญชีและภาษี</h2>
-          <p class="subtext">บันทึกรายรับ-รายจ่าย คำนวณภาษีเงินได้บุคคลธรรมดา และเรียนรู้พื้นฐานบัญชีแบบเข้าใจง่าย</p>
-
-          <div class="tabs">
-            <button class="tab active" data-tab="led" type="button">รายรับ-รายจ่าย</button>
-            <button class="tab" data-tab="tax" type="button">คำนวณภาษี</button>
-            <button class="tab" data-tab="lrn" type="button">เรียนบัญชี</button>
-          </div>
-
-          <div class="tab-panel active" data-tab-panel="led">
-            <div class="kpi-grid">
-              <div class="card kpi-card">
-                <span>รายรับเดือนนี้</span>
-                <b class="up" id="incomeThisMonth">0</b>
-              </div>
-              <div class="card kpi-card">
-                <span>รายจ่ายเดือนนี้</span>
-                <b class="down" id="expenseThisMonth">0</b>
-              </div>
-              <div class="card kpi-card">
-                <span>คงเหลือเดือนนี้</span>
-                <b id="netThisMonth">0</b>
-              </div>
-            </div>
-
-            <div class="card">
-              <b>เพิ่มรายการ</b>
-              <div class="form-grid">
-                <div>
-                  <label for="entryDate">วันที่</label>
-                  <input id="entryDate" type="date" />
-                </div>
-                <div>
-                  <label for="entryType">ประเภท</label>
-                  <select id="entryType">
-                    <option value="in">รายรับ</option>
-                    <option value="out">รายจ่าย</option>
-                  </select>
-                </div>
-                <div>
-                  <label for="entryCategory">หมวดหมู่</label>
-                  <select id="entryCategory"></select>
-                </div>
-                <div>
-                  <label for="entryAmount">จำนวนเงิน (บาท)</label>
-                  <input id="entryAmount" type="number" min="0" placeholder="0" />
-                </div>
-                <div class="wide-field">
-                  <label for="entryNote">บันทึกช่วยจำ</label>
-                  <input id="entryNote" type="text" placeholder="เช่น ค่าอาหารกลางวัน" />
-                </div>
-              </div>
-
-              <div class="action-row">
-                <button type="button" class="primary-btn" id="addEntryBtn">บันทึกรายการ</button>
-                <button type="button" class="ghost-btn" id="backupBtn">สำรองข้อมูล (ดาวน์โหลด)</button>
-                <label class="ghost-btn upload-label">
-                  นำเข้าข้อมูล
-                  <input id="importDataInput" type="file" accept=".json" />
-                </label>
-              </div>
-            </div>
-
-            <div class="card">
-              <b>สรุปรายเดือน (6 เดือนล่าสุด)</b>
-              <div class="bar-chart" id="barChart"></div>
-              <p class="chart-caption">แท่งเขียว = รายรับ · แท่งแดง = รายจ่าย</p>
-            </div>
-
-            <div class="card">
-              <b>รายการล่าสุด</b>
-              <div class="table-wrap">
-                <table>
-                  <tbody id="entriesTableBody"></tbody>
-                </table>
-              </div>
-            </div>
-
-            <p class="footer-note">ข้อมูลเก็บในเบราว์เซอร์ของคุณเท่านั้น ไม่ถูกส่งไปที่เซิร์ฟเวอร์</p>
-          </div>
-
-          <div class="tab-panel" data-tab-panel="tax">
-            <div class="note-box">ปีภาษี 2569 (ยื่นแบบในปี 2570) · คำนวณตามอัตราขั้นบันไดของกรมสรรพากรแบบคร่าวๆ</div>
-
-            <div class="form-grid tax-form">
-              <div>
-                <label>เงินเดือน/ค่าจ้างทั้งปี 40(1)</label>
-                <input type="number" min="0" value="600000" />
-              </div>
-              <div>
-                <label>ฟรีแลนซ์/รับจ้างอิสระ 40(2) ทั้งปี</label>
-                <input type="number" min="0" value="0" />
-              </div>
-              <div>
-                <label>ขายของ/ธุรกิจ 40(8) รายรับทั้งปี</label>
-                <input type="number" min="0" value="0" />
-              </div>
-              <div>
-                <label>วิธีหักค่าใช้จ่าย 40(8)</label>
-                <select>
-                  <option value="0.6">เหมา 60% (ทั่วไป)</option>
-                  <option value="0.4">เหมา 40% (เฉพาะบางประเภท)</option>
-                  <option value="actual">ตามจริง</option>
-                </select>
-              </div>
-              <div>
-                <label>ค่าใช้จ่ายจริง 40(8) (ถ้าเลือกตามจริง)</label>
-                <input type="number" min="0" value="0" />
-              </div>
-              <div>
-                <label>ภาษีที่ถูกหัก ณ ที่จ่ายแล้ว</label>
-                <input type="number" min="0" value="0" />
-              </div>
-              <div>
-                <label>คู่สมรสไม่มีเงินได้</label>
-                <select>
-                  <option value="0">ไม่มี</option>
-                  <option value="1">มี</option>
-                </select>
-              </div>
-              <div>
-                <label>จำนวนบุตร (คนละ 30,000)</label>
-                <input type="number" min="0" value="0" />
-              </div>
-              <div>
-                <label>บุตรคนที่ 2 ขึ้นไป เกิดตั้งแต่ปี 2561</label>
-                <input type="number" min="0" value="0" />
-              </div>
-              <div>
-                <label>พ่อแม่ที่ดูแล (คนละ 30,000 สูงสุด 4 คน)</label>
-                <input type="number" min="0" max="4" value="0" />
-              </div>
-              <div>
-                <label>ประกันสังคม (สูงสุด 9,000)</label>
-                <input type="number" min="0" value="0" />
-              </div>
-              <div>
-                <label>เบี้ยประกันชีวิต (สูงสุด 100,000)</label>
-                <input type="number" min="0" value="0" />
-              </div>
-              <div>
-                <label>เบี้ยประกันสุขภาพ (สูงสุด 25,000)</label>
-                <input type="number" min="0" value="0" />
-              </div>
-              <div>
-                <label>กองทุน SSF (≤30% ของเงินได้, สูงสุด 200,000)</label>
-                <input type="number" min="0" value="0" />
-              </div>
-              <div>
-                <label>กองทุน RMF (≤30% ของเงินได้, สูงสุด 500,000)</label>
-                <input type="number" min="0" value="0" />
-              </div>
-              <div>
-                <label>กองทุนสำรองเลี้ยงชีพ (≤15% ของเงินได้)</label>
-                <input type="number" min="0" value="0" />
-              </div>
-              <div>
-                <label>เงินบริจาคทั่วไป</label>
-                <input type="number" min="0" value="0" />
-              </div>
-            </div>
-
-            <div class="action-row">
-              <button type="button" class="primary-btn" id="taxCalcBtn">คำนวณภาษี</button>
-              <button type="button" class="ghost-btn">ดึงรายรับจากสมุดบัญชีปีนี้</button>
-            </div>
-
-            <div class="tax-output" id="taxOutput"></div>
-            <p class="footer-note">ผลลัพธ์เป็นการประเมินเบื้องต้นเพื่อการศึกษา ไม่ใช่คำแนะนำทางภาษีหรือคำปรึกษาทางกฎหมาย</p>
-          </div>
-
-          <div class="tab-panel" data-tab-panel="lrn">
-            <details open>
-              <summary>1. สมการบัญชี: ทุกอย่างต้องสมดุล</summary>
-              <p><b>สินทรัพย์ = หนี้สิน + ส่วนของเจ้าของ</b></p>
-              <p>ตัวอย่าง: คุณมีเงินสด 100,000 บาท (สินทรัพย์) โดยเป็นเงินกู้ 30,000 (หนี้สิน) และเงินส่วนตัว 70,000 (ทุน) ดังนั้นสมดุลจึงถูกต้อง</p>
-            </details>
-
-            <details>
-              <summary>2. เดบิต-เครดิต</summary>
-              <p>ทุกรายการลงบัญชี 2 ด้านเสมอ ด้านซ้ายคือ <b>เดบิต</b> ด้านขวาคือ <b>เครดิต</b></p>
-              <table class="mini-table">
-                <tbody>
-                  <tr><th>ประเภทบัญชี</th><th>เดบิต</th><th>เครดิต</th></tr>
-                  <tr><td>สินทรัพย์ / ค่าใช้จ่าย</td><td>เพิ่ม</td><td>ลด</td></tr>
-                  <tr><td>หนี้สิน / ทุน / รายได้</td><td>ลด</td><td>เพิ่ม</td></tr>
-                </tbody>
-              </table>
-              <div class="tip-box">ตัวอย่าง: ขายของได้เงินสด 5,000 → เดบิต เงินสด 5,000 / เครดิต รายได้ 5,000</div>
-            </details>
-
-            <details>
-              <summary>3. งบกำไรขาดทุน</summary>
-              <p>บอกว่า "ช่วงเวลาหนึ่ง" ธุรกิจหรือตัวคุณมีรายได้เท่าไร ใช้จ่ายไปเท่าไร และกำไรสุทธิเท่าไร</p>
-              <p><b>กำไรสุทธิ = รายได้ − ค่าใช้จ่าย</b> · หน้า "รายรับ-รายจ่าย" ในเว็บนี้เป็นแบบจำลองหลักของความรู้สึกนี้</p>
-            </details>
-
-            <details>
-              <summary>4. งบดุล</summary>
-              <p>บอกว่า "ณ วันใดวันหนึ่ง" มีสินทรัพย์อะไร เป็นหนี้เท่าไร และส่วนของเจ้าของมีเท่าไร</p>
-            </details>
-
-            <details>
-              <summary>5. เกณฑ์เงินสด vs เกณฑ์คงค้าง</summary>
-              <p><b>เกณฑ์เงินสด</b> บันทึกเมื่อรับ/จ่ายเงินจริงตรงวันนั้น เหมาะสำหรับบุคคลทั่วไป <b>เกณฑ์คงค้าง</b> บันทึกเมื่อเกิดรายการแม้ยังไม่ได้เงิน/จ่ายจริง</p>
-            </details>
-
-            <details>
-              <summary>ศัพท์ที่ควรรู้</summary>
-              <p><b>เงินได้พึงประเมิน</b> รายได้ก่อนหักทุกอย่าง · <b>เงินได้สุทธิ</b> รายได้หลังหักค่าใช้จ่ายที่ยอมให้หักได้</p>
-            </details>
-
-            <div class="card ai-card">
-              <b>ถามครู AI เรื่องบัญชีและความรู้ทั่วไป</b>
-              <div class="chip-row">
-                <button type="button" class="chip">กำไรขั้นต้นกับกำไรสุทธิต่างกันอย่างไร</button>
-                <button type="button" class="chip">ค่าเสื่อมราคาคืออะไร ยกตัวอย่าง</button>
-                <button type="button" class="chip">ฟรีแลนซ์ควรเก็บเอกสารอะไรไว้ยื่นภาษี</button>
-              </div>
-              <div class="ask-row">
-                <input id="aiPrompt" type="text" placeholder="พิมพ์คำถามที่นี่" />
-                <button type="button" class="primary-btn" id="askAiBtn">ถาม</button>
-              </div>
-              <div class="ai-output" id="aiOutput"></div>
-            </div>
-          </div>
-        </section>
-
-        <section class="panel" data-panel="doc">
-          <h2>สรุปไฟล์ / PDF</h2>
-          <p class="subtext">อัปโหลดหรือวางเนื้อหา เลือกรูปแบบสรุป แล้วส่งออกเป็น PDF</p>
-
-          <div class="card noprint">
-            <div class="form-grid">
-              <div>
-                <label for="docFile">ไฟล์ (PDF, Word .docx, .txt)</label>
-                <input id="docFile" type="file" accept=".pdf,.docx,.txt,.md" />
-              </div>
-              <div>
-                <label>ชื่อเรื่องในฉบับสรุป</label>
-                <input type="text" placeholder="เช่น รายงานประชุมไตรมาส 3" />
-              </div>
-              <div>
-                <label>รูปแบบสรุป</label>
-                <select>
-                  <option value="p">1 ย่อหน้า</option>
-                  <option value="k">หัวข้อสำคัญ</option>
-                  <option value="a">สิ่งที่ต้องทำ</option>
-                </select>
-              </div>
-            </div>
-
-            <label class="textarea-label">หรือวางข้อความที่นี่</label>
-            <textarea id="docInput" placeholder="พิมพ์หรือวางเนื้อหาเพื่อสรุป..."></textarea>
-
-            <div class="action-row">
-              <button type="button" class="primary-btn" id="summarizeDocBtn">สรุปเนื้อหา</button>
-            </div>
-
-            <p class="footer-note">สรุปแบบพื้นฐานทำงานในเครื่องคุณ ไม่ส่งไฟล์ออกจากเบราว์เซอร์</p>
-          </div>
-
-          <div class="doc-output" id="docOutput"></div>
-        </section>
-
-        <section class="panel" data-panel="inv">
-          <h2>ที่ปรึกษาการลงทุน</h2>
-          <p class="subtext">กรอกตัวเลขหุ้นที่สนใจ ระบบให้คะแนนและจัดอันดับพร้อมเหตุผลแบบง่ายต่อการเข้าใจ</p>
-          <div class="note-box">เว็บนี้ไม่ดึงราคาสดอัตโนมัติ ให้กรอกตัวเลขล่าสุดจากแหล่งข้อมูลที่คุณเชื่อถือ</div>
-
-          <div class="card noprint">
-            <b>เพิ่มหุ้น</b>
-            <div class="form-grid stock-form">
-              <div><label>ชื่อหุ้น</label><input type="text" id="stockName" /></div>
-              <div><label>P/E (เท่า)</label><input type="number" step="any" id="stockPe" /></div>
-              <div><label>P/B (เท่า)</label><input type="number" step="any" id="stockPb" /></div>
-              <div><label>ROE (%)</label><input type="number" step="any" id="stockRoe" /></div>
-              <div><label>D/E (เท่า)</label><input type="number" step="any" id="stockDe" /></div>
-              <div><label>ปันผล (%)</label><input type="number" step="any" id="stockDy" /></div>
-              <div><label>รายได้โต (%/ปี)</label><input type="number" step="any" id="stockGrowth" /></div>
-              <div><label>RSI (14)</label><input type="number" step="any" id="stockRsi" /></div>
-              <div>
-                <label>แนวโน้มราคา</label>
-                <select id="stockTrend">
-                  <option value="a">เหนือเส้น MA50 และ MA200</option>
-                  <option value="m">ผสม</option>
-                  <option value="b">ต่ำกว่า MA50 และ MA200</option>
-                </select>
-              </div>
-              <div>
-                <label>สัญญาณ MACD</label>
-                <select id="stockMacd">
-                  <option value="u">ขาขึ้น</option>
-                  <option value="n">เป็นกลาง</option>
-                  <option value="d">ขาลง</option>
-                </select>
-              </div>
-            </div>
-
-            <label class="checkbox-label">ปัจจัยเสี่ยงของบริษัทนี้ (เลือกได้หลายข้อ)</label>
-            <div class="risk-options">
-              <label><input type="checkbox" /> หนี้สูง / ภาระดอกเบี้ยมาก</label>
-              <label><input type="checkbox" /> ลูกค้าหรือรายได้กระจุกตัว</label>
-              <label><input type="checkbox" /> กฎระเบียบ / นโยบายภาครัฐ</label>
-            </div>
-
-            <button type="button" class="primary-btn" id="addStockBtn" style="margin-top: 12px;">เพิ่มและให้คะแนน</button>
-          </div>
-
-          <div class="card">
-            <div class="section-head">
-              <b>การจัดอันดับ</b>
-              <select id="stockFilter">
-                <option value="all">ทั้งหมด</option>
-                <option value="div">ปันผลดี (≥4%)</option>
-                <option value="gr">เติบโต (รายได้ ≥10%)</option>
-                <option value="val">ราคาถูก (P/E&lt;12, P/B&lt;1.5)</option>
-              </select>
-            </div>
-
-            <div class="table-wrap">
-              <table>
-                <tbody id="stocksTableBody"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="stock-detail" id="stockDetail"></div>
-          <p class="footer-note">เพื่อการศึกษาเท่านั้น ไม่ใช่คำแนะนำการลงทุนส่วนบุคคล</p>
-        </section>
-      </main>
+  <div id="t-led">
+    <div class="grid" id="kpis"></div>
+    <div class="card" style="margin-top:16px">
+      <b>เพิ่มรายการ</b>
+      <div class="grid" style="margin-top:10px">
+        <div><label>วันที่</label><input type="date" id="l-date"></div>
+        <div><label>ประเภท</label><select id="l-type"><option value="in">รายรับ</option><option value="out">รายจ่าย</option></select></div>
+        <div><label>หมวดหมู่</label><select id="l-cat"></select></div>
+        <div><label>จำนวนเงิน (บาท)</label><input type="number" id="l-amt" min="0" placeholder="0"></div>
+        <div><label>บันทึกช่วยจำ</label><input id="l-note" placeholder="เช่น ค่าอาหารกลางวัน"></div>
+        <div><label>แนบรูปใบเสร็จ (ไม่บังคับ)</label><input type="file" id="l-img" accept="image/*"></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+        <button class="btn" id="l-add">บันทึกรายการ</button>
+        <button class="btn ghost" id="l-exp">สำรองข้อมูล (ดาวน์โหลด)</button>
+        <label class="btn ghost" style="margin:0;color:var(--ink)">นำเข้าข้อมูล<input type="file" id="l-imp" accept=".json" class="hide"></label>
+      </div>
     </div>
+    <div class="card"><b>สรุปรายเดือน (6 เดือนล่าสุด)</b><div class="bar" id="chart" style="margin-top:12px"></div>
+      <p class="sub" style="margin:8px 0 0;font-size:13px">แท่งเขียว = รายรับ · แท่งแดง = รายจ่าย</p></div>
+    <div class="card"><b>รายการล่าสุด</b><div style="overflow-x:auto"><table id="l-table"></table></div></div>
+    <p class="warn">ข้อมูลเก็บในเบราว์เซอร์ของคุณเท่านั้น ไม่ถูกส่งไปที่ใด หากล้างข้อมูลเบราว์เซอร์หรือเปลี่ยนเครื่อง ให้ใช้ปุ่มสำรอง/นำเข้า</p>
+  </div>
 
-    <script src="script.js"></script>
-  </body>
+  <div id="t-tax" class="hide">
+    <div class="note">ปีภาษี 2569 (ยื่นแบบในปี 2570) · คำนวณตามอัตราขั้นบันไดของกรมสรรพากร สำหรับ <b>เงินเดือน/ค่าจ้าง (มาตรา 40(1))</b> · ใส่เฉพาะช่องที่เกี่ยวข้อง ที่เหลือเว้นว่างได้</div>
+    <div class="grid card" style="margin-top:14px">
+      <div><label>เงินเดือน/ค่าจ้างทั้งปี 40(1)</label><input type="number" id="x-inc" min="0" placeholder="เช่น 600000"></div>
+      <div><label>ฟรีแลนซ์/รับจ้างอิสระ 40(2) ทั้งปี</label><input type="number" id="x-fl" min="0"></div>
+      <div><label>ขายของ/ธุรกิจ 40(8) รายรับทั้งปี</label><input type="number" id="x-bz" min="0"></div>
+      <div><label>วิธีหักค่าใช้จ่าย 40(8)</label><select id="x-bzm"><option value="0.6">เหมา 60% (ทั่วไป)</option><option value="0.4">เหมา 40%</option><option value="0.3">เหมา 30%</option><option value="act">ตามจริง</option></select></div>
+      <div><label>ค่าใช้จ่ายจริง 40(8) (ถ้าเลือกตามจริง)</label><input type="number" id="x-bze" min="0"></div>
+      <div><label>ค่าใช้จ่ายจริงของงานฟรีแลนซ์ 40(2) (ถ้ามีหลักฐาน) เพื่อเทียบกับแบบเหมา</label><input type="number" id="x-fa" min="0"></div>
+      <div><label>ภาษีที่ถูกหัก ณ ที่จ่ายแล้ว</label><input type="number" id="x-wh" min="0"></div>
+      <div><label>คู่สมรสไม่มีเงินได้</label><select id="x-sp"><option value="0">ไม่มี</option><option value="1">มี</option></select></div>
+      <div><label>จำนวนบุตร (คนละ 30,000)</label><input type="number" id="x-ch" min="0" value="0"></div>
+      <div><label>บุตรคนที่ 2 ขึ้นไป เกิดตั้งแต่ปี 2561 (เพิ่มคนละ 30,000)</label><input type="number" id="x-ch2" min="0" value="0"></div>
+      <div><label>พ่อแม่ที่ดูแล (คนละ 30,000 สูงสุด 4 คน)</label><input type="number" id="x-pa" min="0" max="4" value="0"></div>
+      <div><label>ประกันสังคม (สูงสุด 9,000)</label><input type="number" id="x-ss" min="0"></div>
+      <div><label>เบี้ยประกันชีวิต (สูงสุด 100,000)</label><input type="number" id="x-li" min="0"></div>
+      <div><label>เบี้ยประกันสุขภาพ (สูงสุด 25,000)</label><input type="number" id="x-hi" min="0"></div>
+      <div><label>กองทุน SSF (≤30% ของเงินได้, สูงสุด 200,000)</label><input type="number" id="x-ssf" min="0"></div>
+      <div><label>กองทุน RMF (≤30% ของเงินได้, สูงสุด 500,000)</label><input type="number" id="x-rmf" min="0"></div>
+      <div><label>กองทุนสำรองเลี้ยงชีพ (≤15% ของเงินได้)</label><input type="number" id="x-pvd" min="0"></div>
+      <div><label>เงินบริจาคทั่วไป</label><input type="number" id="x-don" min="0"></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="x-go">คำนวณภาษี</button><button class="btn ghost" id="x-fill">ดึงรายรับจากสมุดบัญชีปีนี้</button></div>
+    <div id="x-out" style="margin-top:18px"></div>
+    <details style="margin-top:16px"><summary>ปฏิทินภาษีที่ควรรู้</summary>
+      <table><tr><th>กำหนด</th><th>เรื่อง</th></tr>
+      <tr><td>31 ธ.ค.</td><td>วันสุดท้ายที่ซื้อ SSF / RMF / ประกัน / กองทุนสำรองเลี้ยงชีพ เพื่อใช้ลดหย่อนปีนั้น</td></tr>
+      <tr><td>สิ้นเดือน มี.ค.</td><td>ยื่น ภ.ง.ด.90/91 ประจำปีที่ผ่านมา (ยื่นออนไลน์มักขยายเวลาเพิ่มราว 8 วัน)</td></tr>
+      <tr><td>สิ้นเดือน ก.ย.</td><td>ยื่น ภ.ง.ด.94 (ครึ่งปี) สำหรับผู้มีเงินได้ 40(5)–(8) เช่น ธุรกิจ</td></tr>
+      <tr><td>วันที่ 7 ของทุกเดือน</td><td>ยื่น ภ.ง.ด.3 / 53 กรณีหักภาษี ณ ที่จ่าย (ออนไลน์ขยายเวลาเพิ่มได้)</td></tr>
+      <tr><td>วันที่ 15 ของทุกเดือน</td><td>ยื่น ภ.พ.30 สำหรับผู้ประกอบการจด VAT (ออนไลน์ขยายเวลาเพิ่มได้)</td></tr></table>
+      <p class="warn" style="margin-top:8px">กำหนดวันอาจเปลี่ยนตามประกาศ ตรวจสอบกับ rd.go.th ก่อนทุกครั้ง</p></details>
+    <p class="warn">ผลลัพธ์เป็นการประเมินเบื้องต้นเพื่อการศึกษา ไม่ใช่คำปรึกษาทางภาษี อัตราและเพดานลดหย่อนอาจเปลี่ยนแปลงได้ ตรวจสอบกับ <a href="https://www.rd.go.th" target="_blank" rel="noopener" style="color:inherit">rd.go.th</a> หรือสรรพากรก่อนยื่นจริง</p>
+  </div>
+
+  <div id="t-lrn" class="hide">
+    <details open><summary>1. สมการบัญชี: ทุกอย่างต้องสมดุล</summary>
+      <p><b>สินทรัพย์ = หนี้สิน + ส่วนของเจ้าของ</b></p>
+      <p>ตัวอย่าง: คุณมีเงินสด 100,000 บาท (สินทรัพย์) โดยเป็นเงินกู้ 30,000 (หนี้สิน) และเงินของคุณเอง 70,000 (ส่วนของเจ้าของ) ทุกรายการที่บันทึกต้องทำให้สมการนี้ยังสมดุล</p></details>
+    <details><summary>2. เดบิต-เครดิต</summary>
+      <p>ทุกรายการลงบัญชี 2 ด้านเสมอ ด้านซ้ายคือ <b>เดบิต</b> ด้านขวาคือ <b>เครดิต</b> และยอดสองด้านต้องเท่ากัน</p>
+      <table><tr><th>ประเภทบัญชี</th><th>เดบิต</th><th>เครดิต</th></tr>
+      <tr><td>สินทรัพย์ / ค่าใช้จ่าย</td><td>เพิ่ม</td><td>ลด</td></tr>
+      <tr><td>หนี้สิน / ทุน / รายได้</td><td>ลด</td><td>เพิ่ม</td></tr></table>
+      <div class="tip">ตัวอย่าง: ขายของได้เงินสด 5,000 → เดบิต เงินสด 5,000 / เครดิต รายได้จากการขาย 5,000</div></details>
+    <details><summary>3. งบกำไรขาดทุน</summary>
+      <p>บอกว่า "ช่วงเวลาหนึ่ง" ธุรกิจหรือตัวคุณมีรายได้เท่าไร ใช้จ่ายไปเท่าไร และเหลือกำไรหรือขาดทุนเท่าไร</p>
+      <p><b>กำไรสุทธิ = รายได้ − ค่าใช้จ่าย</b> · หน้า "รายรับ-รายจ่าย" ในเว็บนี้ก็คืองบกำไรขาดทุนแบบง่ายของคุณ</p></details>
+    <details><summary>4. งบดุล</summary>
+      <p>บอกว่า "ณ วันใดวันหนึ่ง" มีสินทรัพย์อะไร เป็นหนี้เท่าไร และเหลือเป็นของเราเท่าไร ใช้ดูฐานะการเงิน ต่างจากงบกำไรขาดทุนที่ดูผลงานตลอดช่วงเวลา</p></details>
+    <details><summary>5. เกณฑ์เงินสด vs เกณฑ์คงค้าง</summary>
+      <p><b>เกณฑ์เงินสด</b> บันทึกเมื่อรับ/จ่ายเงินจริง (เหมาะกับบุคคลทั่วไป) · <b>เกณฑ์คงค้าง</b> บันทึกเมื่อเกิดรายการ แม้ยังไม่ได้รับหรือจ่ายเงิน (ใช้ในบริษัท)</p></details>
+    <details><summary>ศัพท์ที่ควรรู้</summary>
+      <p><b>เงินได้พึงประเมิน</b> รายได้ก่อนหักอะไรทั้งหมด · <b>เงินได้สุทธิ</b> รายได้หลังหักค่าใช้จ่ายและค่าลดหย่อน ซึ่งเป็นฐานคิดภาษี · <b>ภาษีหัก ณ ที่จ่าย</b> ภาษีที่ผู้จ่ายหักไว้ล่วงหน้า · <b>ภ.ง.ด.90/91</b> แบบยื่นภาษีประจำปี</p></details>
+    <div class="card" style="margin-top:16px"><b>ถามครู AI เรื่องบัญชีและความรู้ทั่วไป</b>
+      <div style="margin:10px 0"><button class="chip">กำไรขั้นต้นกับกำไรสุทธิต่างกันอย่างไร</button><button class="chip">ค่าเสื่อมราคาคืออะไร ยกตัวอย่าง</button><button class="chip">ฟรีแลนซ์ควรเก็บเอกสารอะไรไว้ยื่นภาษี</button></div>
+      <div style="display:flex;gap:8px"><input id="c-q" placeholder="พิมพ์คำถามที่นี่"><button class="btn" id="c-go" style="white-space:nowrap">ถาม</button></div>
+      <div id="c-out"></div></div>
+    <div class="card"><b>แบบทดสอบ 5 ข้อ</b><div id="qz"></div><button class="btn" id="qz-go" style="margin-top:10px">ตรวจคำตอบ</button><div id="qz-out" class="tip hide"></div></div>
+  </div>
+</section>
+
+<!-- MODULE 2 & 3 placeholders -->
+<section id="m-doc" class="hide">
+  <h2>สรุปไฟล์ / PDF</h2><p class="sub">อัปโหลดหรือวางเนื้อหา เลือกรูปแบบสรุป แล้วส่งออกเป็น PDF</p>
+  <div class="card noprint">
+    <div class="grid"><div><label>ไฟล์ (PDF, Word .docx, .txt)</label><input type="file" id="d-file" accept=".pdf,.docx,.txt,.md"></div>
+    <div><label>ชื่อเรื่องในฉบับสรุป</label><input id="d-title" placeholder="เช่น รายงานประชุมไตรมาส 3"></div>
+    <div><label>รูปแบบสรุป</label><select id="d-mode"><option value="p">1 ย่อหน้า</option><option value="k">หัวข้อสำคัญ</option><option value="a">สิ่งที่ต้องทำ</option></select></div></div>
+    <label style="margin-top:12px">หรือวางข้อความที่นี่ <span id="d-name"></span></label><textarea id="d-text"></textarea>
+    <div style="margin-top:12px"><button class="btn" id="d-go">สรุปเนื้อหา</button></div>
+    <p class="warn" style="margin-bottom:0">สรุปแบบพื้นฐานทำงานในเครื่องคุณ ไม่ส่งไฟล์ออกไปไหน · "สรุปด้วย AI" จะส่งข้อความไปที่ AI ที่คุณตั้งค่าไว้ · ไฟล์สแกนที่เป็นรูปภาพอ่านไม่ได้</p></div>
+  <div id="d-out"></div>
+  <div class="card noprint"><b>ประวัติการสรุป (เก็บในเครื่องนี้ 10 รายการล่าสุด)</b><div id="d-hist" style="margin-top:8px"></div></div>
+</section>
+<section id="m-inv" class="hide">
+  <h2>ที่ปรึกษาการลงทุน</h2><p class="sub">กรอกตัวเลขหุ้นที่สนใจ ระบบให้คะแนนและจัดอันดับพร้อมเหตุผล</p>
+  <div class="note">เว็บนี้ไม่ดึงราคาสดอัตโนมัติ ให้กรอกตัวเลขล่าสุดจากแหล่งที่เชื่อถือได้เอง (เช่น SET, Settrade, งบการเงินบริษัท) · รายการ "ตัวอย่าง" เป็นตัวเลขสมมติ ลบทิ้งได้</div>
+  <div class="card noprint" style="margin-top:14px"><b>เพิ่มหุ้น</b><div class="grid" id="i-form" style="margin-top:10px"></div>
+    <label style="margin-top:12px">ปัจจัยเสี่ยงของบริษัทนี้ (เลือกได้หลายข้อ)</label><div id="i-rk"></div>
+    <button class="btn" id="i-add" style="margin-top:12px;display:inline-block">เพิ่มและให้คะแนน</button></div>
+  <div class="card"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><b>การจัดอันดับ</b>
+    <select id="i-f" style="width:auto"><option value="all">ทั้งหมด</option><option value="div">ปันผลดี (≥4%)</option><option value="gr">เติบโต (รายได้ ≥10%)</option><option value="val">ราคาถูก (P/E&lt;12, P/B&lt;1.5)</option></select></div>
+    <div style="overflow-x:auto"><table id="i-table"></table></div></div>
+  <div id="i-det"></div>
+  <div class="card noprint"><b>เปรียบเทียบหุ้น 2 ตัว</b><div class="grid" style="margin:10px 0"><select id="cp-a"></select><select id="cp-b"></select></div><div style="overflow-x:auto"><table id="cp-t"></table></div></div>
+  <div class="card noprint"><b>พอร์ตจำลอง</b><div class="grid" style="margin:10px 0"><input id="p-n" placeholder="ชื่อหุ้น"><input id="p-q" type="number" placeholder="จำนวนหุ้น"><input id="p-c" type="number" step="any" placeholder="ราคาต้นทุน"><input id="p-p" type="number" step="any" placeholder="ราคาปัจจุบัน"></div><button class="btn" id="p-add">เพิ่มเข้าพอร์ต</button><div style="overflow-x:auto;margin-top:10px"><table id="p-t"></table></div></div>
+  <div class="grid noprint"><div class="card"><b>เครื่องคิด DCA (ลงทุนทุกเดือน)</b><div class="grid" style="margin:10px 0"><div><label>เงินต่อเดือน</label><input id="dc-m" type="number"></div><div><label>จำนวนปี</label><input id="dc-y" type="number"></div><div><label>ผลตอบแทนสมมติ (%/ปี)</label><input id="dc-r" type="number" step="any"></div></div><button class="btn" id="dc-go">คำนวณ</button><p id="dc-out"></p></div>
+  <div class="card"><b>เครื่องคิดเงินปันผล</b><div class="grid" style="margin:10px 0"><div><label>จำนวนหุ้น</label><input id="dv-q" type="number"></div><div><label>ปันผลต่อหุ้นต่อปี (บาท)</label><input id="dv-d" type="number" step="any"></div></div><button class="btn" id="dv-go">คำนวณ</button><p id="dv-out"></p></div></div>
+  <div class="card noprint"><b>แบบประเมินความเสี่ยงของคุณ</b><div id="rp" style="margin-top:8px"></div><button class="btn" id="rp-go" style="margin-top:10px">ดูผล</button><div id="rp-out" class="tip hide"></div></div>
+  <p class="warn">เพื่อการศึกษาเท่านั้น ไม่ใช่คำแนะนำการลงทุนส่วนบุคคล คะแนนเป็นเพียงสูตรคร่าว ๆ จากตัวเลขที่กรอก ไม่ได้พิจารณาข่าว ราคาล่าสุด หรือเป้าหมายการลงทุนของคุณ การลงทุนมีความเสี่ยง ผู้ลงทุนอาจสูญเสียเงินต้น</p>
+</section>
+</main>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const fmt=n=>Math.round(n).toLocaleString('th-TH');
+const safe=(f,d)=>{try{return f()}catch(e){return d}};
+// theme
+const root=document.documentElement;
+root.dataset.theme=safe(()=>localStorage.getItem('mw-theme'),null)||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+$('#theme').onclick=()=>{root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';safe(()=>localStorage.setItem('mw-theme',root.dataset.theme))};
+// nav
+$$('.nav').forEach(b=>b.onclick=()=>{$$('.nav').forEach(x=>x.classList.toggle('on',x===b));['home','acc','doc','inv'].forEach(m=>$('#m-'+m).classList.toggle('hide',m!==b.dataset.m));if(b.dataset.m==='home')refreshHome()});
+$$('#tabs-acc button').forEach(b=>b.onclick=()=>{$$('#tabs-acc button').forEach(x=>x.classList.toggle('on',x===b));['led','tax','lrn'].forEach(t=>$('#t-'+t).classList.toggle('hide',t!==b.dataset.t))});
+
+// ledger
+const CATS={in:['เงินเดือน','โบนัส','งานเสริม','ดอกเบี้ย/ปันผล','อื่น ๆ'],out:['อาหาร','เดินทาง','ที่อยู่อาศัย','สาธารณูปโภค','ช้อปปิ้ง','สุขภาพ','การศึกษา','ลงทุน/ออม','อื่น ๆ']};
+let data=safe(()=>JSON.parse(localStorage.getItem('mw-ledger')||'[]'),[]);
+const save=()=>safe(()=>{localStorage.setItem('mw-ledger',JSON.stringify(data));return true},false);
+const setCats=()=>{$('#l-cat').innerHTML=CATS[$('#l-type').value].map(c=>`<option>${c}</option>`).join('')};
+$('#l-type').onchange=setCats;setCats();
+$('#l-date').valueAsDate=new Date();
+$('#l-add').onclick=async()=>{const a=+$('#l-amt').value;if(!a||a<=0){alert('กรุณาใส่จำนวนเงินที่มากกว่า 0');return}
+ const im=await shrink($('#l-img').files[0]);data.push({id:Date.now(),d:$('#l-date').value,t:$('#l-type').value,c:$('#l-cat').value,a,n:$('#l-note').value,img:im});if(!save()){data.pop();alert('พื้นที่จัดเก็บเต็ม ลองสำรองข้อมูลแล้วลบรายการเก่า หรือไม่แนบรูป')}$('#l-img').value='';$('#l-amt').value='';$('#l-note').value='';render()};
+$('#l-exp').onclick=()=>{const u=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:'application/json'}));const a=document.createElement('a');a.href=u;a.download='moneywise-backup.json';a.click();URL.revokeObjectURL(u)};
+$('#l-imp').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const j=JSON.parse(t);if(!Array.isArray(j))throw 0;data=j;save();render()}catch(_){alert('ไฟล์ไม่ถูกต้อง ใช้ไฟล์สำรองที่ดาวน์โหลดจากเว็บนี้')}})};
+function render(){
+ const ym=new Date().toISOString().slice(0,7);
+ const sum=(f)=>data.filter(f).reduce((s,x)=>s+x.a,0);
+ const inc=sum(x=>x.t==='in'&&x.d.startsWith(ym)),exp=sum(x=>x.t==='out'&&x.d.startsWith(ym)),net=inc-exp;
+ $('#kpis').innerHTML=`<div class="card kpi"><span>รายรับเดือนนี้</span><b class="up">${fmt(inc)}</b></div><div class="card kpi"><span>รายจ่ายเดือนนี้</span><b class="down">${fmt(exp)}</b></div><div class="card kpi"><span>คงเหลือเดือนนี้</span><b class="${net>=0?'up':'down'}">${net>=0?'+':''}${fmt(net)}</b></div>`;
+ const ms=[];for(let i=5;i>=0;i--){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);ms.push(d.toISOString().slice(0,7))}
+ const vals=ms.map(m=>[sum(x=>x.t==='in'&&x.d.startsWith(m)),sum(x=>x.t==='out'&&x.d.startsWith(m))]);
+ const mx=Math.max(1,...vals.flat());
+ $('#chart').innerHTML=ms.map((m,i)=>`<div><div class="pair"><i style="height:${vals[i][0]/mx*100}%"></i><i class="e" style="height:${vals[i][1]/mx*100}%"></i></div>${m.slice(5)}/${m.slice(2,4)}</div>`).join('');
+ const rows=[...data].sort((a,b)=>b.d.localeCompare(a.d)).slice(0,30);
+ $('#l-table').innerHTML=rows.length?`<tr><th>วันที่</th><th>หมวด</th><th>บันทึก</th><th class="n">จำนวน</th><th></th></tr>`+rows.map(x=>`<tr><td>${x.d}</td><td>${x.c}</td><td>${(x.n||'').replace(/[<>&]/g,'')}${x.img?` <a href="#" data-img="${x.id}">ดูรูป</a>`:''}</td><td class="n ${x.t==='in'?'up':'down'}">${x.t==='in'?'+':'−'}${fmt(x.a)}</td><td><button class="btn ghost" style="padding:2px 10px" data-del="${x.id}" aria-label="ลบ">ลบ</button></td></tr>`).join(''):'<tr><td>ยังไม่มีรายการ เริ่มจากกรอกฟอร์มด้านบน แล้วกด "บันทึกรายการ"</td></tr>';
+ $$('[data-del]').forEach(b=>b.onclick=()=>{data=data.filter(x=>x.id!=b.dataset.del);save();render()});
+ $$('[data-img]').forEach(a=>a.onclick=e=>{e.preventDefault();const o=data.find(x=>x.id==a.dataset.img),w=open('');if(w)w.document.body.innerHTML='<img style="max-width:100%" src="'+o.img+'">'});
+ safe(()=>refreshHome());
+}
+render();
+
+// tax
+const BR=[[150000,0],[300000,.05],[500000,.10],[750000,.15],[1000000,.20],[2000000,.25],[5000000,.30],[Infinity,.35]];
+const v=id=>Math.max(0,+$('#'+id).value||0);
+$('#x-fill').onclick=()=>{const y=new Date().getFullYear();$('#x-inc').value=data.filter(x=>x.t==='in'&&x.d.startsWith(y)).reduce((s,x)=>s+x.a,0);};
+$('#x-go').onclick=()=>{
+ const inc0=v('x-inc'),fl=v('x-fl'),bz=v('x-bz'),inc=inc0+fl+bz;if(!inc){$('#x-out').innerHTML='<div class="note">กรุณาใส่เงินได้ทั้งปีก่อนคำนวณ</div>';return}
+ const bzx=$('#x-bzm').value==='act'?Math.min(v('x-bze'),bz):bz*(+$('#x-bzm').value);const flat=Math.min((inc0+fl)*.5,100000),fa=Math.min(v('x-fa'),fl),act=Math.min(inc0*.5,100000)+fa,useAct=fa>0&&act>flat,exp=(useAct?act:flat)+bzx;const cmp=fa>0?`<div class="note">เทียบค่าใช้จ่าย: แบบเหมา ${fmt(flat)} · แบบตามจริง ${fmt(act)} → ใช้แบบ${useAct?'ตามจริง (ประหยัดภาษีกว่า)':'เหมา (ประหยัดภาษีกว่า)'} · แบบตามจริงต้องมีหลักฐานครบ</div>`:'';
+ const D=[['ส่วนตัว',60000],['คู่สมรส',+$('#x-sp').value*60000],['บุตร',v('x-ch')*30000+v('x-ch2')*30000],['บิดามารดา',Math.min(v('x-pa'),4)*30000],
+  ['ประกันสังคม',Math.min(v('x-ss'),9000)],['ประกันสุขภาพ',Math.min(v('x-hi'),25000)]];
+ const life=Math.min(v('x-li'),100000);D.push(['ประกันชีวิต',life]);
+ const ssf=Math.min(v('x-ssf'),inc*.3,200000),rmf=Math.min(v('x-rmf'),inc*.3,500000),pvd=Math.min(v('x-pvd'),inc*.15,500000);
+ let ret=ssf+rmf+pvd;const retCap=Math.min(ret,500000);D.push(['SSF + RMF + กองทุนสำรองฯ (รวมไม่เกิน 500,000)',retCap]);
+ const sub=D.reduce((s,x)=>s+x[1],0);
+ const pre=Math.max(0,inc-exp-sub);
+ const don=Math.min(v('x-don'),pre*.1);if(don)D.push(['เงินบริจาค (≤10% ของเงินได้หลังลดหย่อน)',don]);
+ const totalD=sub+don,net=Math.max(0,inc-exp-totalD);
+ let tax=0,prev=0,rows='';
+ BR.forEach(([cap,r])=>{const part=Math.max(0,Math.min(net,cap)-prev);if(part>0){const t=part*r;tax+=t;rows+=`<tr><td>${fmt(prev+1)} – ${cap===Infinity?'ขึ้นไป':fmt(cap)}</td><td class="n">${r*100}%</td><td class="n">${fmt(part)}</td><td class="n">${fmt(t)}</td></tr>`}prev=cap});
+ const g=fl+bz;let mn='';if(g>120000&&tax<g*.005){tax=g*.005;mn='<div class="note">ภาษีที่คำนวณได้ต่ำกว่าเกณฑ์ภาษีขั้นต่ำ 0.5% ของเงินได้ 40(2)–(8) จึงใช้ยอดขั้นต่ำแทน</div>'}
+ safe(()=>localStorage.setItem('mw-tax',JSON.stringify({tax,net})));const wh=v('x-wh'),diff=tax-wh,mr=BR.find(b=>net<=b[0])[1];
+ const tips=[];
+ if(life<100000)tips.push(`ประกันชีวิตยังใช้สิทธิ์ได้อีก ${fmt(100000-life)} บาท`);
+ if(v('x-hi')<25000)tips.push(`ประกันสุขภาพยังใช้สิทธิ์ได้อีก ${fmt(25000-v('x-hi'))} บาท (ส่วนนี้รวมกับประกันชีวิตแล้วไม่เกิน 100,000)`);
+ const room=Math.min(500000,inc*.3)-ret;if(room>0&&mr>0)tips.push(`ซื้อ SSF/RMF เพิ่มได้อีกสูงสุดราว ${fmt(Math.min(room,200000))} บาท จะประหยัดภาษีราว ${fmt(Math.min(room,200000)*mr)} บาท (ตามอัตราภาษีขั้นสูงสุดของคุณ ${mr*100}%) · ตรวจเงื่อนไขการถือครองของแต่ละกองทุนก่อนซื้อ`);
+ if(!tips.length)tips.push('คุณใช้สิทธิ์ลดหย่อนที่กรอกมาเต็มเพดานแล้ว');
+ $('#x-out').innerHTML=`
+ <div class="grid"><div class="card kpi"><span>เงินได้สุทธิ</span><b>${fmt(net)}</b></div><div class="card kpi"><span>ภาษีที่ต้องเสียทั้งปี</span><b>${fmt(tax)}</b></div>
+ <div class="card kpi"><span>${diff>=0?'ต้องชำระเพิ่ม':'ขอคืนภาษี'}</span><b class="${diff>=0?'down':'up'}">${fmt(Math.abs(diff))}</b></div></div>
+ <div class="card"><b>วิธีคิด ทีละขั้น</b>
+  <div class="step"><em>1</em><div>เงินได้ทั้งปี <b>${fmt(inc)}</b></div></div>
+  <div class="step"><em>2</em><div>หักค่าใช้จ่าย 50% ไม่เกิน 100,000 → หักได้ <b>${fmt(exp)}</b></div></div>
+  <div class="step"><em>3</em><div>หักค่าลดหย่อนรวม <b>${fmt(totalD)}</b><br><span style="font-size:14px;color:var(--mute)">${D.filter(x=>x[1]>0).map(x=>x[0]+' '+fmt(x[1])).join(' · ')}</span></div></div>
+  <div class="step"><em>4</em><div>เงินได้สุทธิ = <b>${fmt(net)}</b> แล้วคิดตามขั้นบันได<span class="hint">เงินได้สุทธิคือยอดที่ใช้คิดภาษีจริง หลังหักค่าใช้จ่ายและค่าลดหย่อนแล้ว 150,000 บาทแรกไม่เสียภาษี และอัตราเพิ่มขึ้นตามช่วงรายได้</span></div></div>
+  <div style="overflow-x:auto;margin-top:8px"><table><tr><th>ช่วงเงินได้สุทธิ</th><th class="n">อัตรา</th><th class="n">เงินได้ในช่วงนี้</th><th class="n">ภาษี</th></tr>${rows||'<tr><td colspan=4>เงินได้สุทธิไม่เกิน 150,000 ได้รับยกเว้นภาษี</td></tr>'}<tr><td colspan=3><b>รวมภาษี</b></td><td class="n"><b>${fmt(tax)}</b></td></tr></table></div>
+ </div>
+ ${mn}${cmp}<div class="card"><b>ยังลดหย่อนได้อีก</b>${tips.map(t=>`<div class="tip">${t}</div>`).join('')}</div>`;
+};
+
+// ===== AI proxy =====
+let AIURL=safe(()=>localStorage.getItem('mw-ai'),'')||'';
+$('#ai-set').onclick=()=>{const u=prompt('ใส่ URL ของ AI proxy (ดูวิธีตั้งค่าในไฟล์ ai-proxy-worker.js)',AIURL);if(u!==null){AIURL=u.trim();safe(()=>localStorage.setItem('mw-ai',AIURL))}};
+const esc=x=>String(x).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+async function runAI(btn,box,sys,prompt){const old=btn.textContent;btn.textContent='กำลังคิด...';
+ try{if(!AIURL)throw new Error('ยังไม่ได้ตั้งค่า AI กดปุ่ม "ตั้งค่า AI" ที่เมนูด้านข้าง');
+  const r=await fetch(AIURL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:sys,prompt})});
+  if(!r.ok)throw new Error('AI ตอบกลับผิดพลาด ('+r.status+')');box.innerHTML=esc((await r.json()).text||'(ไม่มีคำตอบ)')}
+ catch(e){box.innerHTML=esc(e.message)}
+ box.className='ai';btn.textContent=old}
+// ===== AI tutor =====
+$$('.chip').forEach(c=>c.onclick=()=>{$('#c-q').value=c.textContent;$('#c-go').click()});
+$('#c-go').onclick=()=>{const q=$('#c-q').value.trim();if(!q)return;const o=document.createElement('div');$('#c-out').prepend(o);
+ runAI($('#c-go'),o,'คุณเป็นครูสอนบัญชีและภาษีไทย ตอบภาษาไทยง่าย ๆ มีตัวอย่างตัวเลข กระชับ ถ้าเป็นเรื่องภาษีให้แนะนำตรวจสอบกับกรมสรรพากร ตอบความรู้ทั่วไปได้ด้วย',q)};
+$('#c-q').onkeydown=e=>{if(e.key==='Enter')$('#c-go').click()};
+// ===== Summarizer =====
+const seg=window.Intl&&Intl.Segmenter?new Intl.Segmenter('th',{granularity:'word'}):null;
+const toks=x=>seg?[...seg.segment(x)].filter(w=>w.isWordLike&&w.segment.length>1).map(w=>w.segment.toLowerCase()):x.toLowerCase().split(/\s+/).filter(w=>w.length>1);
+const sents=t=>t.replace(/\r/g,'').split(/\n+|(?<=[.!?。])\s+|\s{2,}/).map(x=>x.trim()).filter(x=>x.length>15).flatMap(x=>x.length>260?x.match(/.{1,200}(\s|$)/g).map(y=>y.trim()):[x]);
+function rank(t,n){const S=sents(t),f={};S.forEach(x=>toks(x).forEach(w=>f[w]=(f[w]||0)+1));
+ return S.map((x,i)=>{const k=toks(x);return{x,i,sc:k.reduce((a,w)=>a+f[w],0)/Math.sqrt(k.length||1)}}).sort((a,b)=>b.sc-a.sc).slice(0,n).sort((a,b)=>a.i-b.i).map(o=>o.x)}
+const loadJS=u=>new Promise((ok,no)=>{const e=document.createElement('script');e.src=u;e.onload=ok;e.onerror=no;document.head.appendChild(e)});
+$('#d-file').onchange=async e=>{const f=e.target.files[0];if(!f)return;$('#d-name').textContent='('+f.name+')';const ext=f.name.split('.').pop().toLowerCase();let t='';
+ try{if(ext==='pdf'){const B='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';await loadJS(B+'pdf.min.js');pdfjsLib.GlobalWorkerOptions.workerSrc=B+'pdf.worker.min.js';
+   const d=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise;for(let i=1;i<=d.numPages;i++){const c=await(await d.getPage(i)).getTextContent();t+=c.items.map(x=>x.str).join(' ')+'\n'}}
+  else if(ext==='docx'){await loadJS('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js');t=(await mammoth.extractRawText({arrayBuffer:await f.arrayBuffer()})).value}
+  else t=await f.text();
+  $('#d-text').value=t;if(t.trim().length<50)alert('ไม่พบข้อความในไฟล์ (อาจเป็นไฟล์สแกนรูปภาพ)')}
+ catch(_){alert('อ่านไฟล์ไม่ได้ ลองวางข้อความลงในช่องแทน')} };
+$('#d-go').onclick=()=>{const t=$('#d-text').value.trim();if(t.length<80){alert('เนื้อหาสั้นเกินไป กรุณาอัปโหลดไฟล์หรือวางข้อความอย่างน้อยหนึ่งย่อหน้า');return}
+ const m=$('#d-mode').value,title=$('#d-title').value||'ฉบับสรุป';const li=a=>'<ul>'+a.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>';let h;
+ if(m==='p')h='<p>'+esc(rank(t,4).join(' '))+'</p>';else if(m==='k')h=li(rank(t,7));
+ else{const A=sents(t).filter(x=>/ต้อง|ควร|กำหนด|ภายใน|ขอให้|ดำเนินการ|deadline|action|todo|must|should/i.test(x)).slice(0,10);h=A.length?li(A):'<p>ไม่พบประโยคที่เป็นงานที่ต้องทำ ลองเลือกรูปแบบ "หัวข้อสำคัญ"</p>'}
+ $('#d-out').innerHTML=`<div class="card"><h3 style="margin-top:0">${esc(title)}</h3><p class="sub">สรุปเมื่อ ${new Date().toLocaleDateString('th-TH')} · จากเนื้อหา ${fmt(t.length)} ตัวอักษร</p>${h}<div id="d-ai"></div></div>
+ <div class="noprint" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="d-pdf">ส่งออกเป็น PDF</button><button class="btn ghost" id="d-aib">สรุปด้วย AI (ละเอียดกว่า)</button></div>
+ <p class="warn noprint">กด "ส่งออกเป็น PDF" แล้วเลือกปลายทางเป็น "บันทึกเป็น PDF" ในหน้าต่างพิมพ์</p>`;
+ $('#d-pdf').onclick=()=>print();dhAdd(title,$('#d-out .card').innerHTML);
+ $('#d-aib').onclick=()=>runAI($('#d-aib'),$('#d-ai'),'คุณเป็นผู้ช่วยสรุปเอกสารภาษาไทย สรุปให้ชัดเจน อ่านง่าย รักษาตัวเลขและชื่อให้ถูกต้อง ไม่เพิ่มข้อมูลที่ไม่มีในเอกสาร','รูปแบบที่ต้องการ: '+$('#d-mode').selectedOptions[0].text+'\n\nเนื้อหา:\n'+t.slice(0,12000))};
+// ===== Investment advisor =====
+const RK={debt:'หนี้สูง / ภาระดอกเบี้ย',conc:'ลูกค้าหรือรายได้กระจุกตัว',reg:'กฎระเบียบ / นโยบายรัฐ',cyc:'วัฏจักรอุตสาหกรรม / ราคาสินค้า',fx:'ค่าเงิน / ต้นทุนวัตถุดิบ',gov:'ธรรมาภิบาล / ผู้บริหาร',liq:'สภาพคล่องของหุ้นต่ำ'};
+const FD=[['n','ชื่อหุ้น','text'],['pe','P/E (เท่า)'],['pb','P/B (เท่า)'],['roe','ROE (%)'],['de','D/E (เท่า)'],['dy','ปันผล (%)'],['g','รายได้โต (%/ปี)'],['rsi','RSI (14)']];
+$('#i-form').innerHTML=FD.map(([k,l,t])=>`<div><label>${l}</label><input id="i-${k}" type="${t||'number'}" step="any"></div>`).join('')+
+ '<div><label>แนวโน้มราคา</label><select id="i-tr"><option value="a">เหนือเส้น MA50 และ MA200</option><option value="m">ผสม</option><option value="b">ต่ำกว่า MA50 และ MA200</option></select></div><div><label>สัญญาณ MACD</label><select id="i-mc"><option value="u">ขาขึ้น</option><option value="n">เป็นกลาง</option><option value="d">ขาลง</option></select></div>';
+$('#i-rk').innerHTML=Object.entries(RK).map(([k,l])=>`<label style="display:inline-block;margin-right:14px;color:var(--ink)"><input type="checkbox" value="${k}" style="width:auto"> ${l}</label>`).join('');
+let ST=safe(()=>JSON.parse(localStorage.getItem('mw-stocks')||'null'),null)||[
+ {n:'ตัวอย่าง A (ธนาคาร)',pe:8,pb:.8,roe:10,de:1.5,dy:5.5,g:4,rsi:55,tr:'a',mc:'n',rk:['reg','cyc']},
+ {n:'ตัวอย่าง B (เทคโนโลยี)',pe:28,pb:6,roe:22,de:.3,dy:1.2,g:18,rsi:68,tr:'a',mc:'u',rk:['conc','fx']},
+ {n:'ตัวอย่าง C (พลังงาน)',pe:6,pb:.7,roe:7,de:1.8,dy:7,g:-3,rsi:34,tr:'b',mc:'d',rk:['cyc','debt','reg']}];
+const sv=()=>safe(()=>localStorage.setItem('mw-stocks',JSON.stringify(ST)));
+function score(x){const w=[];let F=0,T=0;
+ const pick=(v,t,lab)=>{for(const[th,pt,tx]of t)if(v<th){F+=pt;w.push(lab+' '+v+' → '+tx);return}};
+ if(x.pe>0)pick(x.pe,[[10,20,'ราคาถูกเมื่อเทียบกำไร'],[15,16,'ราคาสมเหตุสมผล'],[25,10,'ค่อนข้างแพง'],[1e9,4,'แพง']],'P/E');else w.push('P/E ติดลบหรือไม่มี → บริษัทอาจขาดทุน');
+ pick(x.pb,[[1,10,'ต่ำกว่ามูลค่าทางบัญชี'],[2,8,'ปกติ'],[4,5,'ค่อนข้างสูง'],[1e9,2,'สูง']],'P/B');
+ const r=x.roe;const rp=r>=20?25:r>=12?18:r>=8?10:3;F+=rp;w.push('ROE '+r+'% → '+(rp>=18?'ทำกำไรจากทุนได้ดี':rp>=10?'พอใช้':'ต่ำ'));
+ pick(x.de,[[.5,15,'หนี้ต่ำ'],[1,11,'หนี้พอเหมาะ'],[2,6,'หนี้ค่อนข้างสูง'],[1e9,2,'หนี้สูง']],'D/E');
+ const g=x.g;const gp=g>=15?20:g>=5?14:g>=0?8:2;F+=gp;w.push('รายได้โต '+g+'% → '+(gp>=14?'เติบโตดี':gp>=8?'ทรงตัว':'หดตัว'));
+ const d=x.dy;const dp=d>=5?10:d>=3?8:d>=1?5:2;F+=dp;w.push('ปันผล '+d+'% → '+(dp>=8?'ผลตอบแทนปันผลดี':'ปันผลน้อย'));
+ const rs=x.rsi;const rsp=rs>70?10:rs>=60?25:rs>=40?30:rs>=30?20:15;T+=rsp;w.push('RSI '+rs+' → '+(rs>70?'ซื้อมากเกินไป ระวังพักตัว':rs<30?'ขายมากเกินไป อาจรีบาวด์ แต่ยังเสี่ยง':'อยู่ในโซนปกติ'));
+ T+={a:40,m:22,b:8}[x.tr];w.push('แนวโน้ม → '+{a:'เหนือค่าเฉลี่ยทั้งสองเส้น',m:'สัญญาณผสม',b:'ต่ำกว่าค่าเฉลี่ยทั้งสองเส้น'}[x.tr]);
+ T+={u:30,n:18,d:6}[x.mc];w.push('MACD → '+{u:'โมเมนตัมขึ้น',n:'เป็นกลาง',d:'โมเมนตัมลง'}[x.mc]);
+ const R=Math.max(0,100-13*x.rk.length);return{F,T,R,tot:Math.round(F*.4+T*.3+R*.3),w}}
+const lab=t=>t>=70?['น่าสนใจ','up']:t>=50?['ปานกลาง','']:['ระวัง','down'];
+let sel=0;
+function renderI(){safe(()=>{renderCmp();renderPf()});const f=$('#i-f').value;
+ const L=ST.map((x,i)=>({x,i,s:score(x)})).filter(o=>f==='all'||(f==='div'&&o.x.dy>=4)||(f==='gr'&&o.x.g>=10)||(f==='val'&&o.x.pe>0&&o.x.pe<12&&o.x.pb<1.5)).sort((a,b)=>b.s.tot-a.s.tot);
+ $('#i-table').innerHTML=L.length?'<tr><th>อันดับ</th><th>หุ้น</th><th class="n">Fundamental</th><th class="n">Technical</th><th class="n">ความปลอดภัย</th><th class="n">รวม</th><th>สรุป</th></tr>'+L.map((o,k)=>{const[t,c]=lab(o.s.tot);return`<tr data-i="${o.i}" class="${o.i===sel?'sel':''}"><td>${k+1}</td><td>${esc(o.x.n)}</td><td class="n">${o.s.F}</td><td class="n">${o.s.T}</td><td class="n">${o.s.R}</td><td class="n"><b>${o.s.tot}</b></td><td><span class="pill ${c}">${t}</span></td></tr>`}).join(''):'<tr><td>ไม่มีหุ้นที่ตรงเงื่อนไข</td></tr>';
+ $$('#i-table tr[data-i]').forEach(r=>r.onclick=()=>{sel=+r.dataset.i;renderI()});
+ const x=ST[sel];if(!x){$('#i-det').innerHTML='';return}const s=score(x);
+ $('#i-det').innerHTML=`<div class="card"><b>${esc(x.n)} · คะแนนรวม ${s.tot}/100</b><p class="sub" style="font-size:14px">รวม = Fundamental 40% + Technical 30% + ความปลอดภัย 30%</p>
+ <div class="grid"><div><b>เหตุผลของคะแนน</b><span class="hint">P/E = ราคาเทียบกำไรต่อหุ้น (ต่ำ = ถูก) · P/B = ราคาเทียบมูลค่าบัญชี · ROE = กำไรต่อเงินทุนผู้ถือหุ้น · D/E = หนี้ต่อทุน · RSI = วัดว่าราคาขึ้นหรือลงแรงเกินไปหรือไม่ (30–70 ถือว่าปกติ) · MACD = วัดโมเมนตัมราคา</span><ul>${s.w.map(t=>'<li>'+esc(t)+'</li>').join('')}</ul></div>
+ <div><b>ปัจจัยเสี่ยงที่ระบุ</b>${x.rk.length?'<ul>'+x.rk.map(k=>'<li>'+RK[k]+'</li>').join('')+'</ul>':'<p>ไม่ได้ระบุ (ควรตรวจสอบเองจากงบการเงินและ 56-1 One Report)</p>'}</div></div>
+ <div class="noprint" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="i-aib">ให้ AI วิเคราะห์เพิ่ม</button><button class="btn ghost" id="i-del">ลบหุ้นนี้</button></div><div id="i-ai"></div></div>`;
+ $('#i-del').onclick=()=>{ST.splice(sel,1);sel=0;sv();renderI()};
+ $('#i-aib').onclick=()=>runAI($('#i-aib'),$('#i-ai'),'คุณเป็นนักวิเคราะห์หุ้นไทยเพื่อการศึกษา ตอบภาษาไทยกระชับ แยกหัวข้อ จุดแข็ง จุดอ่อน ความเสี่ยง และสิ่งที่ควรติดตาม ใช้เฉพาะข้อมูลที่ให้มา ห้ามแต่งตัวเลข ไม่ฟันธงให้ซื้อหรือขาย และย้ำว่าไม่ใช่คำแนะนำการลงทุน','หุ้น: '+x.n+'\nตัวเลข: '+JSON.stringify(x)+'\nคะแนน: '+JSON.stringify({F:s.F,T:s.T,R:s.R,รวม:s.tot})+'\nความเสี่ยงที่ระบุ: '+x.rk.map(k=>RK[k]).join(', '))}
+$('#i-f').onchange=renderI;
+$('#i-add').onclick=()=>{const g=k=>parseFloat($('#i-'+k).value),o={n:$('#i-n').value.trim()};
+ for(const k of ['pe','pb','roe','de','dy','g','rsi']){o[k]=g(k);if(isNaN(o[k])){alert('กรุณากรอกตัวเลขให้ครบทุกช่อง (ใส่ 0 ถ้าไม่มี)');return}}
+ if(!o.n){alert('กรุณาใส่ชื่อหุ้น');return}o.tr=$('#i-tr').value;o.mc=$('#i-mc').value;o.rk=$$('#i-rk input:checked').map(c=>c.value);
+ ST.push(o);sel=ST.length-1;sv();renderI();FD.forEach(([k])=>$('#i-'+k).value='');$$('#i-rk input').forEach(c=>c.checked=false)};
+
+// ===== extra features =====
+function shrink(f){return new Promise(ok=>{if(!f)return ok('');const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const k=Math.min(1,700/i.width),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.6))};i.onerror=()=>ok('');i.src=r.result};r.onerror=()=>ok('');r.readAsDataURL(f)})}
+$('#nb').onclick=()=>{document.body.classList.toggle('nb');$('#nb').textContent='โหมดมือใหม่: '+(document.body.classList.contains('nb')?'เปิด':'ปิด')};
+$$('[data-go]').forEach(b=>b.onclick=()=>$('.nav[data-m='+b.dataset.go+']').click());
+// doc history
+let DH=safe(()=>JSON.parse(localStorage.getItem('mw-dh')||'[]'),[]);
+function dhAdd(t,h){DH.unshift({t,d:new Date().toLocaleDateString('th-TH'),h});DH=DH.slice(0,10);safe(()=>localStorage.setItem('mw-dh',JSON.stringify(DH)));dhRender()}
+function dhRender(){$('#d-hist').innerHTML=DH.length?DH.map((x,i)=>`<div style="padding:4px 0"><a href="#" data-h="${i}">${esc(x.t)}</a> <span class="sub" style="font-size:13px">${x.d}</span></div>`).join(''):'ยังไม่มีประวัติ';
+ $$('[data-h]').forEach(a=>a.onclick=e=>{e.preventDefault();$('#d-out').innerHTML=`<div class="card">${DH[a.dataset.h].h}</div><div class="noprint"><button class="btn" id="d-pdf2">ส่งออกเป็น PDF</button></div>`;$('#d-pdf2').onclick=()=>print();scrollTo(0,0)})}
+dhRender();
+// quiz
+const QZ=[['สมการบัญชีคือข้อใด',['สินทรัพย์ = หนี้สิน + ส่วนของเจ้าของ','กำไร = สินทรัพย์ − หนี้สิน','รายได้ = ค่าใช้จ่าย'],0],['จ่ายค่าอาหารเป็นเงินสด 500 บาท (ค่าใช้จ่าย) ลงบัญชีอย่างไร',['เดบิต ค่าใช้จ่าย / เครดิต เงินสด','เดบิต เงินสด / เครดิต ค่าใช้จ่าย','เครดิตทั้งสองด้าน'],0],['งบกำไรขาดทุนบอกอะไร',['ฐานะ ณ วันใดวันหนึ่ง','ผลการดำเนินงานตลอดช่วงเวลา','ภาษีที่ต้องจ่าย'],1],['เกณฑ์คงค้างบันทึกรายการเมื่อใด',['เมื่อรับหรือจ่ายเงินจริง','เมื่อเกิดรายการ แม้ยังไม่ได้รับหรือจ่ายเงิน','ตอนสิ้นปี'],1],['เงินได้สุทธิคืออะไร',['รายได้ก่อนหักอะไรทั้งหมด','รายได้หลังหักค่าใช้จ่ายและค่าลดหย่อน','ภาษีที่หักไว้แล้ว'],1]];
+$('#qz').innerHTML=QZ.map((q,i)=>`<p style="margin:12px 0 4px"><b>${i+1}. ${q[0]}</b></p>`+q[1].map((o,j)=>`<label style="color:var(--ink);display:block"><input type="radio" name="q${i}" value="${j}" style="width:auto"> ${o}</label>`).join('')).join('');
+$('#qz-go').onclick=()=>{let ok=0;const miss=[];QZ.forEach((q,i)=>{const c=document.querySelector(`input[name=q${i}]:checked`);if(c&&+c.value===q[2])ok++;else miss.push(`ข้อ ${i+1}: ${q[1][q[2]]}`)});
+ const o=$('#qz-out');o.classList.remove('hide');o.innerHTML=`ได้ ${ok}/${QZ.length} คะแนน`+(miss.length?'<br>เฉลยข้อที่ยังไม่ถูก<br>'+miss.join('<br>'):' · ยอดเยี่ยม')};
+// risk profile
+const RQ=[['คุณลงทุนระยะยาวแค่ไหน',['ไม่เกิน 1 ปี','1–3 ปี','3–7 ปี','มากกว่า 7 ปี']],['ถ้าพอร์ตลง 20% ใน 3 เดือน คุณจะทำอย่างไร',['ขายทั้งหมด','ขายบางส่วน','ถือต่อ','ซื้อเพิ่ม']],['รายได้ประจำของคุณ',['ไม่แน่นอนมาก','ค่อนข้างไม่แน่นอน','ค่อนข้างมั่นคง','มั่นคงมาก']],['ประสบการณ์ลงทุน',['ไม่เคย','ฝากประจำ/กองทุนตราสารหนี้','กองทุนหุ้น/หุ้น','หุ้น อนุพันธ์ หรือสินทรัพย์ผันผวน']],['เป้าหมายหลัก',['รักษาเงินต้น','รายได้สม่ำเสมอ','เติบโตปานกลาง','เติบโตสูงสุด']],['เงินสำรองฉุกเฉิน',['ไม่มี','น้อยกว่า 3 เดือน','3–6 เดือน','มากกว่า 6 เดือน']]];
+$('#rp').innerHTML=RQ.map((q,i)=>`<p style="margin:10px 0 4px"><b>${i+1}. ${q[0]}</b></p>`+q[1].map((o,j)=>`<label style="color:var(--ink);display:inline-block;margin-right:14px"><input type="radio" name="r${i}" value="${j+1}" style="width:auto"> ${o}</label>`).join('')).join('');
+$('#rp-go').onclick=()=>{let t=0;for(let i=0;i<RQ.length;i++){const c=document.querySelector(`input[name=r${i}]:checked`);if(!c){alert('กรุณาตอบให้ครบทุกข้อ');return}t+=+c.value}
+ const L=t<=10?['อนุรักษ์นิยม','หุ้นราว 10–20% ที่เหลือเป็นเงินฝาก/ตราสารหนี้']:t<=16?['ปานกลาง','หุ้นราว 30–50%']:t<=20?['เติบโต','หุ้นราว 50–70%']:['รับความเสี่ยงสูง','หุ้นราว 70–90%'];
+ const o=$('#rp-out');o.classList.remove('hide');o.innerHTML=`ผู้ลงทุนแบบ <b>${L[0]}</b> (${t}/24 คะแนน)<br>ตัวอย่างสัดส่วนทั่วไปเพื่อการศึกษา: ${L[1]} · ไม่ใช่คำแนะนำเฉพาะบุคคล · หุ้นที่ได้คะแนน "ระวัง" มักไม่เหมาะกับผู้ลงทุนกลุ่มอนุรักษ์นิยม`};
+// compare
+function renderCmp(){const o=ST.map((x,i)=>`<option value="${i}">${esc(x.n)}</option>`).join('');['a','b'].forEach((k,j)=>{const e=$('#cp-'+k),v=e.value;e.innerHTML=o;e.value=(v!==''&&+v<ST.length)?v:Math.min(j,ST.length-1)});cmpDraw()}
+function cmpDraw(){const a=ST[$('#cp-a').value],b=ST[$('#cp-b').value];if(!a||!b){$('#cp-t').innerHTML='<tr><td>ต้องมีหุ้นอย่างน้อย 1 ตัว</td></tr>';return}const A=score(a),B=score(b),w=(p,q)=>p>q?'up':p<q?'down':'';
+ $('#cp-t').innerHTML=`<tr><th></th><th class="n">${esc(a.n)}</th><th class="n">${esc(b.n)}</th></tr>`+[['P/E','pe'],['P/B','pb'],['ROE (%)','roe'],['D/E','de'],['ปันผล (%)','dy'],['รายได้โต (%)','g'],['RSI','rsi']].map(([l,k])=>`<tr><td>${l}</td><td class="n">${a[k]}</td><td class="n">${b[k]}</td></tr>`).join('')+[['Fundamental','F'],['Technical','T'],['ความปลอดภัย','R'],['คะแนนรวม','tot']].map(([l,k])=>`<tr><td><b>${l}</b></td><td class="n ${w(A[k],B[k])}"><b>${A[k]}</b></td><td class="n ${w(B[k],A[k])}"><b>${B[k]}</b></td></tr>`).join('')+`<tr><td>ปัจจัยเสี่ยงที่ระบุ</td><td class="n">${a.rk.length} ข้อ</td><td class="n">${b.rk.length} ข้อ</td></tr>`}
+$('#cp-a').onchange=$('#cp-b').onchange=cmpDraw;
+// portfolio
+let PF=safe(()=>JSON.parse(localStorage.getItem('mw-pf')||'[]'),[]);
+const spf=()=>safe(()=>localStorage.setItem('mw-pf',JSON.stringify(PF)));
+function renderPf(){const T=PF.reduce((s,x)=>s+(x.p-x.c)*x.q,0);
+ $('#p-t').innerHTML=PF.length?'<tr><th>หุ้น</th><th class="n">จำนวน</th><th class="n">ต้นทุน</th><th class="n">ราคาปัจจุบัน</th><th class="n">กำไร/ขาดทุน</th><th></th></tr>'+PF.map((x,i)=>{const d=(x.p-x.c)*x.q;return`<tr><td>${esc(x.n)}</td><td class="n">${fmt(x.q)}</td><td class="n">${x.c}</td><td class="n">${x.p}</td><td class="n ${d>=0?'up':'down'}">${d>=0?'+':'−'}${fmt(Math.abs(d))} (${((x.p/x.c-1)*100).toFixed(1)}%)</td><td><button class="btn ghost" style="padding:2px 10px" data-pd="${i}">ลบ</button></td></tr>`}).join('')+`<tr><td colspan=4><b>รวม</b></td><td class="n ${T>=0?'up':'down'}"><b>${T>=0?'+':'−'}${fmt(Math.abs(T))}</b></td><td></td></tr>`:'<tr><td>ยังไม่มีหุ้นในพอร์ต</td></tr>';
+ $$('[data-pd]').forEach(b=>b.onclick=()=>{PF.splice(+b.dataset.pd,1);spf();renderPf();safe(()=>refreshHome())})}
+$('#p-add').onclick=()=>{const o={n:$('#p-n').value.trim(),q:+$('#p-q').value,c:+$('#p-c').value,p:+$('#p-p').value};if(!o.n||!(o.q>0)||!(o.c>0)||!(o.p>0)){alert('กรุณากรอกชื่อหุ้น จำนวน ราคาต้นทุน และราคาปัจจุบันให้ครบ (มากกว่า 0)');return}PF.push(o);spf();['n','q','c','p'].forEach(k=>$('#p-'+k).value='');renderPf();safe(()=>refreshHome())};
+// calculators
+$('#dc-go').onclick=()=>{const m=+$('#dc-m').value,y=+$('#dc-y').value,r=+$('#dc-r').value||0;if(!(m>0&&y>0)){alert('กรุณาใส่เงินต่อเดือนและจำนวนปี');return}const i=r/1200,n=y*12,fv=i?m*((Math.pow(1+i,n)-1)/i):m*n;
+ $('#dc-out').innerHTML=`ลงทุน ${fmt(m)} บาท/เดือน นาน ${y} ปี เงินต้นรวม <b>${fmt(m*n)}</b> บาท → ประมาณ <b class="up">${fmt(fv)}</b> บาท (ผลตอบแทนสมมติ ${r}%/ปี ทบต้นรายเดือน) ผลจริงไม่แน่นอนและอาจขาดทุน`};
+$('#dv-go').onclick=()=>{const q=+$('#dv-q').value,d=+$('#dv-d').value;if(!(q>0&&d>0)){alert('กรุณาใส่จำนวนหุ้นและปันผลต่อหุ้น');return}const g=q*d;
+ $('#dv-out').innerHTML=`ปันผลรวมปีละ <b>${fmt(g)}</b> บาท · หลังหักภาษี ณ ที่จ่าย 10% ≈ <b>${fmt(g*.9)}</b> บาท (ตรวจเงื่อนไขการขอเครดิตภาษีเงินปันผลกับสรรพากร)`};
+// dashboard
+function refreshHome(){safe(()=>{const ym=new Date().toISOString().slice(0,7),sm=t=>data.filter(x=>x.t===t&&x.d.startsWith(ym)).reduce((a,x)=>a+x.a,0),i=sm('in'),o=sm('out'),tx=safe(()=>JSON.parse(localStorage.getItem('mw-tax')),null),pl=PF.reduce((a,x)=>a+(x.p-x.c)*x.q,0);
+ $('#h-kpi').innerHTML=`<div class="card kpi"><span>รายรับเดือนนี้</span><b class="up">${fmt(i)}</b></div><div class="card kpi"><span>รายจ่ายเดือนนี้</span><b class="down">${fmt(o)}</b></div><div class="card kpi"><span>ภาษีที่ประเมินไว้ล่าสุด</span><b>${tx?fmt(tx.tax):'–'}</b></div><div class="card kpi"><span>กำไร/ขาดทุนพอร์ตจำลอง</span><b class="${pl>=0?'up':'down'}">${pl>=0?'+':'−'}${fmt(Math.abs(pl))}</b></div>`;
+ const top=ST.map(x=>({x,s:score(x)})).sort((a,b)=>b.s.tot-a.s.tot).slice(0,3);
+ $('#h-st').innerHTML=top.length?top.map(o=>`<div style="padding:3px 0">${esc(o.x.n)} <b>${o.s.tot}</b> <span class="pill ${lab(o.s.tot)[1]}">${lab(o.s.tot)[0]}</span></div>`).join(''):'ยังไม่มีหุ้น เพิ่มได้ที่เมนู "ที่ปรึกษาการลงทุน"';
+ $('#h-doc').innerHTML=DH.length?`<b>${esc(DH[0].t)}</b><div class="sub" style="margin:0">${DH[0].d}</div>`:'ยังไม่มีไฟล์ที่สรุป'},null)}
+renderI();refreshHome();
+</script>
+</body>
 </html>
