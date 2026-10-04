@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Moneywise</title>
+    <meta
+      name="description"
+      content="Moneywise dashboard for personal finance, tax estimation, and investment scoring."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="moneywise-app">
+      <aside class="sidebar">
+        <h1>Moneywise</h1>
+
+        <button class="nav active" data-target="acc" type="button">
+          <span>บัญชีและภาษี</span>
+          <small>ขั้นที่ 1 · พร้อมใช้</small>
+        </button>
+        <button class="nav" data-target="doc" type="button">
+          <span>สรุปไฟล์ / PDF</span>
+          <small>ขั้นที่ 2 · พร้อมใช้</small>
+        </button>
+        <button class="nav" data-target="inv" type="button">
+          <span>ที่ปรึกษาการลงทุน</span>
+          <small>ขั้นที่ 3 · พร้อมใช้</small>
+        </button>
+
+        <div class="sidebar-spacer"></div>
+
+        <button type="button" class="secondary-btn" id="aiSetupBtn">ตั้งค่า AI</button>
+        <button type="button" class="secondary-btn" id="themeToggleBtn">โหมดมืด / สว่าง</button>
+      </aside>
+
+      <main class="main-panel">
+        <section class="panel active" data-panel="acc">
+          <h2>บัญชีและภาษี</h2>
+          <p class="subtext">บันทึกรายรับ-รายจ่าย คำนวณภาษีเงินได้บุคคลธรรมดา และเรียนรู้พื้นฐานบัญชีแบบเข้าใจง่าย</p>
+
+          <div class="tabs">
+            <button class="tab active" data-tab="led" type="button">รายรับ-รายจ่าย</button>
+            <button class="tab" data-tab="tax" type="button">คำนวณภาษี</button>
+            <button class="tab" data-tab="lrn" type="button">เรียนบัญชี</button>
+          </div>
+
+          <div class="tab-panel active" data-tab-panel="led">
+            <div class="kpi-grid">
+              <div class="card kpi-card">
+                <span>รายรับเดือนนี้</span>
+                <b class="up" id="incomeThisMonth">0</b>
+              </div>
+              <div class="card kpi-card">
+                <span>รายจ่ายเดือนนี้</span>
+                <b class="down" id="expenseThisMonth">0</b>
+              </div>
+              <div class="card kpi-card">
+                <span>คงเหลือเดือนนี้</span>
+                <b id="netThisMonth">0</b>
+              </div>
+            </div>
+
+            <div class="card">
+              <b>เพิ่มรายการ</b>
+              <div class="form-grid">
+                <div>
+                  <label for="entryDate">วันที่</label>
+                  <input id="entryDate" type="date" />
+                </div>
+                <div>
+                  <label for="entryType">ประเภท</label>
+                  <select id="entryType">
+                    <option value="in">รายรับ</option>
+                    <option value="out">รายจ่าย</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="entryCategory">หมวดหมู่</label>
+                  <select id="entryCategory"></select>
+                </div>
+                <div>
+                  <label for="entryAmount">จำนวนเงิน (บาท)</label>
+                  <input id="entryAmount" type="number" min="0" placeholder="0" />
+                </div>
+                <div class="wide-field">
+                  <label for="entryNote">บันทึกช่วยจำ</label>
+                  <input id="entryNote" type="text" placeholder="เช่น ค่าอาหารกลางวัน" />
+                </div>
+              </div>
+
+              <div class="action-row">
+                <button type="button" class="primary-btn" id="addEntryBtn">บันทึกรายการ</button>
+                <button type="button" class="ghost-btn" id="backupBtn">สำรองข้อมูล (ดาวน์โหลด)</button>
+                <label class="ghost-btn upload-label">
+                  นำเข้าข้อมูล
+                  <input id="importDataInput" type="file" accept=".json" />
+                </label>
+              </div>
+            </div>
+
+            <div class="card">
+              <b>สรุปรายเดือน (6 เดือนล่าสุด)</b>
+              <div class="bar-chart" id="barChart"></div>
+              <p class="chart-caption">แท่งเขียว = รายรับ · แท่งแดง = รายจ่าย</p>
+            </div>
+
+            <div class="card">
+              <b>รายการล่าสุด</b>
+              <div class="table-wrap">
+                <table>
+                  <tbody id="entriesTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <p class="footer-note">ข้อมูลเก็บในเบราว์เซอร์ของคุณเท่านั้น ไม่ถูกส่งไปที่เซิร์ฟเวอร์</p>
+          </div>
+
+          <div class="tab-panel" data-tab-panel="tax">
+            <div class="note-box">ปีภาษี 2569 (ยื่นแบบในปี 2570) · คำนวณตามอัตราขั้นบันไดของกรมสรรพากรแบบคร่าวๆ</div>
+
+            <div class="form-grid tax-form">
+              <div>
+                <label>เงินเดือน/ค่าจ้างทั้งปี 40(1)</label>
+                <input type="number" min="0" value="600000" />
+              </div>
+              <div>
+                <label>ฟรีแลนซ์/รับจ้างอิสระ 40(2) ทั้งปี</label>
+                <input type="number" min="0" value="0" />
+              </div>
+              <div>
+                <label>ขายของ/ธุรกิจ 40(8) รายรับทั้งปี</label>
+                <input type="number" min="0" value="0" />
+              </div>
+              <div>
+                <label>วิธีหักค่าใช้จ่าย 40(8)</label>
+                <select>
+                  <option value="0.6">เหมา 60% (ทั่วไป)</option>
+                  <option value="0.4">เหมา 40% (เฉพาะบางประเภท)</option>
+                  <option value="actual">ตามจริง</option>
+                </select>
+              </div>
+              <div>
+                <label>ค่าใช้จ่ายจริง 40(8) (ถ้าเลือกตามจริง)</label>
+                <input type="number" min="0" value="0" />
+              </div>
+              <div>
+                <label>ภาษีที่ถูกหัก ณ ที่จ่ายแล้ว</label>
+                <input type="number" min="0" value="0" />
+              </div>
+              <div>
+                <label>คู่สมรสไม่มีเงินได้</label>
+                <select>
+                  <option value="0">ไม่มี</option>
+                  <option value="1">มี</option>
+                </select>
+              </div>
+              <div>
+                <label>จำนวนบุตร (คนละ 30,000)</label>
+                <input type="number" min="0" value="0" />
+              </div>
+              <div>
+                <label>บุตรคนที่ 2 ขึ้นไป เกิดตั้งแต่ปี 2561</label>
+                <input type="number" min="0" value="0" />
+              </div>
+              <div>
+                <label>พ่อแม่ที่ดูแล (คนละ 30,000 สูงสุด 4 คน)</label>
+                <input type="number" min="0" max="4" value="0" />
+              </div>
+              <div>
+                <label>ประกันสังคม (สูงสุด 9,000)</label>
+                <input type="number" min="0" value="0" />
+              </div>
+              <div>
+                <label>เบี้ยประกันชีวิต (สูงสุด 100,000)</label>
+                <input type="number" min="0" value="0" />
+              </div>
+              <div>
+                <label>เบี้ยประกันสุขภาพ (สูงสุด 25,000)</label>
+                <input type="number" min="0" value="0" />
+              </div>
+              <div>
+                <label>กองทุน SSF (≤30% ของเงินได้, สูงสุด 200,000)</label>
+                <input type="number" min="0" value="0" />
+              </div>
+              <div>
+                <label>กองทุน RMF (≤30% ของเงินได้, สูงสุด 500,000)</label>
+                <input type="number" min="0" value="0" />
+              </div>
+              <div>
+                <label>กองทุนสำรองเลี้ยงชีพ (≤15% ของเงินได้)</label>
+                <input type="number" min="0" value="0" />
+              </div>
+              <div>
+                <label>เงินบริจาคทั่วไป</label>
+                <input type="number" min="0" value="0" />
+              </div>
+            </div>
+
+            <div class="action-row">
+              <button type="button" class="primary-btn" id="taxCalcBtn">คำนวณภาษี</button>
+              <button type="button" class="ghost-btn">ดึงรายรับจากสมุดบัญชีปีนี้</button>
+            </div>
+
+            <div class="tax-output" id="taxOutput"></div>
+            <p class="footer-note">ผลลัพธ์เป็นการประเมินเบื้องต้นเพื่อการศึกษา ไม่ใช่คำแนะนำทางภาษีหรือคำปรึกษาทางกฎหมาย</p>
+          </div>
+
+          <div class="tab-panel" data-tab-panel="lrn">
+            <details open>
+              <summary>1. สมการบัญชี: ทุกอย่างต้องสมดุล</summary>
+              <p><b>สินทรัพย์ = หนี้สิน + ส่วนของเจ้าของ</b></p>
+              <p>ตัวอย่าง: คุณมีเงินสด 100,000 บาท (สินทรัพย์) โดยเป็นเงินกู้ 30,000 (หนี้สิน) และเงินส่วนตัว 70,000 (ทุน) ดังนั้นสมดุลจึงถูกต้อง</p>
+            </details>
+
+            <details>
+              <summary>2. เดบิต-เครดิต</summary>
+              <p>ทุกรายการลงบัญชี 2 ด้านเสมอ ด้านซ้ายคือ <b>เดบิต</b> ด้านขวาคือ <b>เครดิต</b></p>
+              <table class="mini-table">
+                <tbody>
+                  <tr><th>ประเภทบัญชี</th><th>เดบิต</th><th>เครดิต</th></tr>
+                  <tr><td>สินทรัพย์ / ค่าใช้จ่าย</td><td>เพิ่ม</td><td>ลด</td></tr>
+                  <tr><td>หนี้สิน / ทุน / รายได้</td><td>ลด</td><td>เพิ่ม</td></tr>
+                </tbody>
+              </table>
+              <div class="tip-box">ตัวอย่าง: ขายของได้เงินสด 5,000 → เดบิต เงินสด 5,000 / เครดิต รายได้ 5,000</div>
+            </details>
+
+            <details>
+              <summary>3. งบกำไรขาดทุน</summary>
+              <p>บอกว่า "ช่วงเวลาหนึ่ง" ธุรกิจหรือตัวคุณมีรายได้เท่าไร ใช้จ่ายไปเท่าไร และกำไรสุทธิเท่าไร</p>
+              <p><b>กำไรสุทธิ = รายได้ − ค่าใช้จ่าย</b> · หน้า "รายรับ-รายจ่าย" ในเว็บนี้เป็นแบบจำลองหลักของความรู้สึกนี้</p>
+            </details>
+
+            <details>
+              <summary>4. งบดุล</summary>
+              <p>บอกว่า "ณ วันใดวันหนึ่ง" มีสินทรัพย์อะไร เป็นหนี้เท่าไร และส่วนของเจ้าของมีเท่าไร</p>
+            </details>
+
+            <details>
+              <summary>5. เกณฑ์เงินสด vs เกณฑ์คงค้าง</summary>
+              <p><b>เกณฑ์เงินสด</b> บันทึกเมื่อรับ/จ่ายเงินจริงตรงวันนั้น เหมาะสำหรับบุคคลทั่วไป <b>เกณฑ์คงค้าง</b> บันทึกเมื่อเกิดรายการแม้ยังไม่ได้เงิน/จ่ายจริง</p>
+            </details>
+
+            <details>
+              <summary>ศัพท์ที่ควรรู้</summary>
+              <p><b>เงินได้พึงประเมิน</b> รายได้ก่อนหักทุกอย่าง · <b>เงินได้สุทธิ</b> รายได้หลังหักค่าใช้จ่ายที่ยอมให้หักได้</p>
+            </details>
+
+            <div class="card ai-card">
+              <b>ถามครู AI เรื่องบัญชีและความรู้ทั่วไป</b>
+              <div class="chip-row">
+                <button type="button" class="chip">กำไรขั้นต้นกับกำไรสุทธิต่างกันอย่างไร</button>
+                <button type="button" class="chip">ค่าเสื่อมราคาคืออะไร ยกตัวอย่าง</button>
+                <button type="button" class="chip">ฟรีแลนซ์ควรเก็บเอกสารอะไรไว้ยื่นภาษี</button>
+              </div>
+              <div class="ask-row">
+                <input id="aiPrompt" type="text" placeholder="พิมพ์คำถามที่นี่" />
+                <button type="button" class="primary-btn" id="askAiBtn">ถาม</button>
+              </div>
+              <div class="ai-output" id="aiOutput"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" data-panel="doc">
+          <h2>สรุปไฟล์ / PDF</h2>
+          <p class="subtext">อัปโหลดหรือวางเนื้อหา เลือกรูปแบบสรุป แล้วส่งออกเป็น PDF</p>
+
+          <div class="card noprint">
+            <div class="form-grid">
+              <div>
+                <label for="docFile">ไฟล์ (PDF, Word .docx, .txt)</label>
+                <input id="docFile" type="file" accept=".pdf,.docx,.txt,.md" />
+              </div>
+              <div>
+                <label>ชื่อเรื่องในฉบับสรุป</label>
+                <input type="text" placeholder="เช่น รายงานประชุมไตรมาส 3" />
+              </div>
+              <div>
+                <label>รูปแบบสรุป</label>
+                <select>
+                  <option value="p">1 ย่อหน้า</option>
+                  <option value="k">หัวข้อสำคัญ</option>
+                  <option value="a">สิ่งที่ต้องทำ</option>
+                </select>
+              </div>
+            </div>
+
+            <label class="textarea-label">หรือวางข้อความที่นี่</label>
+            <textarea id="docInput" placeholder="พิมพ์หรือวางเนื้อหาเพื่อสรุป..."></textarea>
+
+            <div class="action-row">
+              <button type="button" class="primary-btn" id="summarizeDocBtn">สรุปเนื้อหา</button>
+            </div>
+
+            <p class="footer-note">สรุปแบบพื้นฐานทำงานในเครื่องคุณ ไม่ส่งไฟล์ออกจากเบราว์เซอร์</p>
+          </div>
+
+          <div class="doc-output" id="docOutput"></div>
+        </section>
+
+        <section class="panel" data-panel="inv">
+          <h2>ที่ปรึกษาการลงทุน</h2>
+          <p class="subtext">กรอกตัวเลขหุ้นที่สนใจ ระบบให้คะแนนและจัดอันดับพร้อมเหตุผลแบบง่ายต่อการเข้าใจ</p>
+          <div class="note-box">เว็บนี้ไม่ดึงราคาสดอัตโนมัติ ให้กรอกตัวเลขล่าสุดจากแหล่งข้อมูลที่คุณเชื่อถือ</div>
+
+          <div class="card noprint">
+            <b>เพิ่มหุ้น</b>
+            <div class="form-grid stock-form">
+              <div><label>ชื่อหุ้น</label><input type="text" id="stockName" /></div>
+              <div><label>P/E (เท่า)</label><input type="number" step="any" id="stockPe" /></div>
+              <div><label>P/B (เท่า)</label><input type="number" step="any" id="stockPb" /></div>
+              <div><label>ROE (%)</label><input type="number" step="any" id="stockRoe" /></div>
+              <div><label>D/E (เท่า)</label><input type="number" step="any" id="stockDe" /></div>
+              <div><label>ปันผล (%)</label><input type="number" step="any" id="stockDy" /></div>
+              <div><label>รายได้โต (%/ปี)</label><input type="number" step="any" id="stockGrowth" /></div>
+              <div><label>RSI (14)</label><input type="number" step="any" id="stockRsi" /></div>
+              <div>
+                <label>แนวโน้มราคา</label>
+                <select id="stockTrend">
+                  <option value="a">เหนือเส้น MA50 และ MA200</option>
+                  <option value="m">ผสม</option>
+                  <option value="b">ต่ำกว่า MA50 และ MA200</option>
+                </select>
+              </div>
+              <div>
+                <label>สัญญาณ MACD</label>
+                <select id="stockMacd">
+                  <option value="u">ขาขึ้น</option>
+                  <option value="n">เป็นกลาง</option>
+                  <option value="d">ขาลง</option>
+                </select>
+              </div>
+            </div>
+
+            <label class="checkbox-label">ปัจจัยเสี่ยงของบริษัทนี้ (เลือกได้หลายข้อ)</label>
+            <div class="risk-options">
+              <label><input type="checkbox" /> หนี้สูง / ภาระดอกเบี้ยมาก</label>
+              <label><input type="checkbox" /> ลูกค้าหรือรายได้กระจุกตัว</label>
+              <label><input type="checkbox" /> กฎระเบียบ / นโยบายภาครัฐ</label>
+            </div>
+
+            <button type="button" class="primary-btn" id="addStockBtn" style="margin-top: 12px;">เพิ่มและให้คะแนน</button>
+          </div>
+
+          <div class="card">
+            <div class="section-head">
+              <b>การจัดอันดับ</b>
+              <select id="stockFilter">
+                <option value="all">ทั้งหมด</option>
+                <option value="div">ปันผลดี (≥4%)</option>
+                <option value="gr">เติบโต (รายได้ ≥10%)</option>
+                <option value="val">ราคาถูก (P/E&lt;12, P/B&lt;1.5)</option>
+              </select>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <tbody id="stocksTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="stock-detail" id="stockDetail"></div>
+          <p class="footer-note">เพื่อการศึกษาเท่านั้น ไม่ใช่คำแนะนำการลงทุนส่วนบุคคล</p>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
